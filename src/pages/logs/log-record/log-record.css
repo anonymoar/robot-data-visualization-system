@@ -1,0 +1,62 @@
+.log-record {
+  display: flex;
+}
+
+.log-record + .log-record {
+  border-bottom: 1px solid #111;
+}
+
+.log-record__tag,
+.log-record__created,
+.log-record__message {
+  padding: 20px;
+}
+
+.log-record__tag {
+  overflow: hidden;
+  width: 78px;
+
+  flex-shrink: 0;
+  text-align: left;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.log-record_level_debug {
+  background: rgba(91, 145, 214, 0.8);
+}
+
+.log-record_level_info {
+  background: rgba(32, 156, 48, 0.8);
+}
+
+.log-record_level_warning {
+  background: rgba(221, 211, 71, 0.8);
+}
+
+.log-record_level_error {
+  background: rgba(218, 79, 79, 0.8);
+}
+
+.log-record_level_critical {
+  background: rgb(0, 0, 0, 0.8);
+  color: #fff;
+}
+
+.log-record_level_notset {
+  background: rgba(122, 122, 122, 0.4);
+}
+
+.log-record__message {
+  flex-grow: 1;
+  text-align: left;
+  white-space: normal;
+}
+
+.log-record__message-text {
+  margin: 0px;
+}
+
+.log-record__created {
+  background: rgb(0, 0, 0, 0.2);
+}

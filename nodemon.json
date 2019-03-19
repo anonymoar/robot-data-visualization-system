@@ -1,0 +1,10 @@
+{
+  "ext": "ts",
+  "watch": ["server"],
+  "ignore": ["server/**/*.test.ts"],
+  "exec": "node -r ts-node/register ./server/index.ts",
+  "env": {
+    "NODE_ENV": "development",
+    "TS_NODE_PROJECT": "tsconfig.server.json"
+  }
+}

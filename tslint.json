@@ -1,0 +1,6 @@
+{
+  "extends": ["@hellroot/tslint-config"],
+  "linterOptions": {
+    "exclude": ["./node_modules", "./build"]
+  }
+}

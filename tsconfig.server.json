@@ -1,0 +1,17 @@
+{
+  "include": ["server"],
+  "compilerOptions": {
+    "sourceMap": true,
+    "target": "es2018",
+    "module": "commonjs",
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "lib": ["dom", "dom.iterable", "es2018"],
+
+    "strict": true,
+    "skipLibCheck": true,
+    "noFallthroughCasesInSwitch": true,
+    "suppressImplicitAnyIndexErrors": true,
+    "forceConsistentCasingInFileNames": true
+  }
+}
