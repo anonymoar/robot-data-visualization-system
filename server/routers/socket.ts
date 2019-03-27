@@ -9,6 +9,24 @@ export function setupSocketServers(browserServer: Server, robotServer: Server) {
     });
   });
 
+  const browserLogsNamespace = browserServer.of('/logs');
+  browserLogsNamespace.on('connection', socket => {
+    console.log('[logs] User connected');
+
+    socket.on('disconnect', () => {
+      console.log('[logs] User disconnected');
+    });
+  });
+
+  const browserChartsNamespace = browserServer.of('/charts');
+  browserChartsNamespace.on('connection', socket => {
+    console.log('[charts] User connected');
+
+    socket.on('disconnect', () => {
+      console.log('[chart] User disconnected');
+    });
+  });
+
   robotServer.on('connection', socket => {
     console.log('Robot connected');
 
@@ -22,11 +40,25 @@ export function setupSocketServers(browserServer: Server, robotServer: Server) {
 
     socket.on('log record', (data: string) => {
       console.log(`[logs] Log record "${data}" received`);
-      browserServer.emit('log record', data);
+      browserLogsNamespace.emit('log record', data);
     });
 
     socket.on('disconnect', () => {
       console.log('[logs] Robot disconnected');
+    });
+  });
+
+  robotServer.of('/charts').on('connection', socket => {
+    console.log('[charts] Robot connected');
+
+    // TODO: Изменить any на интерфейс описывающий точку
+    socket.on('chart point', (data: any) => {
+      console.log(`[charts] chart point "${JSON.stringify(data)}" received`);
+      browserChartsNamespace.emit('chart point', data);
+    });
+
+    socket.on('disconnect', () => {
+      console.log('[chart] Robot disconnected');
     });
   });
 }

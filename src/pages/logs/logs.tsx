@@ -11,15 +11,15 @@ import './logs.css';
 
 const b = classname('logs');
 
-interface iState {
+interface IState {
   logRecords: ILogRecord[];
 }
 
-export class Logs extends Component<{}, iState> {
-  public readonly state: iState = { logRecords: [] };
+export class Logs extends Component<{}, IState> {
+  public readonly state: IState = { logRecords: [] };
 
   public componentDidMount() {
-    const socket = io.connect(config.server.baseUrl);
+    const socket = io.connect(`${config.server.baseUrl}/logs`);
 
     socket.on('connect', () => {
       console.log('WebSocket connection established');
@@ -27,7 +27,7 @@ export class Logs extends Component<{}, iState> {
     socket.on('log record', (data: string) => {
       console.log(`Server sent "${data}" via WebSocket`);
       this.setState(oldState => {
-        return { logRecords: oldState.logRecords.concat(JSON.parse(data))};
+        return { logRecords: oldState.logRecords.concat(JSON.parse(data)) };
       });
     });
     socket.on('error', (error: string) => {
@@ -39,6 +39,9 @@ export class Logs extends Component<{}, iState> {
   }
 
   public render() {
+    if (!this.state.logRecords.length) {
+      return 'Аркадий, подключи робота!';
+    }
     return <LogList list={this.state.logRecords} />;
   }
 }

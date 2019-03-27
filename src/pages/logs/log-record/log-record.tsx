@@ -16,8 +16,8 @@ interface IProps {
 // TODO: вынести цвета из всех файлов глобально
 // TODO: порядок модификаторов в css
 export const LogRecord: FC<IProps> = props => {
-  const {log, cls} = props;
-  const {tag, created, level, message, exception} = log;
+  const { log, cls } = props;
+  const { tag, created, level, message, exception } = log;
   const time = new Date(created * 1000);
 
   return (
