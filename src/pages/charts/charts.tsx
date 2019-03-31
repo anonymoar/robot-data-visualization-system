@@ -16,6 +16,7 @@ interface ILinePoints {
   [lineId: string]: Point[];
 }
 
+// TODO: Вынести интерфейсы в отдельный файл
 interface IState {
   chartLines: IChartLines;
   linePoints: ILinePoints;
@@ -35,16 +36,15 @@ export class Charts extends Component<{}, IState> {
     });
     // TODO: Изменить any на интерфейс описывающий точку
     socket.on('chart point', (chartPoint: any) => {
-      console.log(`Server sent "${chartPoint}" via WebSocket`);
       this.setState(oldState => {
-        if (!oldState.chartLines[chartPoint.chartId]){
-          oldState.chartLines[chartPoint.chartId] = new Set();
+        if (!oldState.chartLines[chartPoint.chart_id]) {
+          oldState.chartLines[chartPoint.chart_id] = new Set();
         }
-        if(!oldState.linePoints[chartPoint.lineId]){
-          oldState.linePoints[chartPoint.lineId] = [];
+        if (!oldState.linePoints[chartPoint.line_id]) {
+          oldState.linePoints[chartPoint.line_id] = [];
         }
-        oldState.chartLines[chartPoint.chartId].add(chartPoint.lineId);
-        oldState.linePoints[chartPoint.lineId].push([chartPoint.timeStamp, chartPoint.value]);
+        oldState.chartLines[chartPoint.chart_id].add(chartPoint.line_id);
+        oldState.linePoints[chartPoint.line_id].push([chartPoint.timestamp, chartPoint.value]);
 
         return { ...oldState };
       });
@@ -70,7 +70,29 @@ export class Charts extends Component<{}, IState> {
 
         <Switch>
           {Object.keys(this.state.chartLines).map(chartId => {
-            return <Route key={chartId} path={`/charts/${chartId}`} render={() => <Chart chartId={chartId} />} />;
+            const newLinePoints: ILinePoints = {};
+            this.state.chartLines[chartId].forEach(lineId => {
+              newLinePoints[lineId] = [];
+              const j = this.state.linePoints[lineId];
+              if (this.state.linePoints[lineId]) {
+                const y = this.state.linePoints[lineId];
+                newLinePoints[lineId] = newLinePoints[lineId].concat(this.state.linePoints[lineId]);
+              }
+            });
+
+            return (
+              <Route
+                key={chartId}
+                path={`/charts/${chartId}`}
+                render={() => (
+                  <Chart
+                    chartId={chartId}
+                    lines={this.state.chartLines[chartId]}
+                    linePoints={newLinePoints}
+                  />
+                )}
+              />
+            );
           })}
           <Route path="/charts/*" render={() => '404'} />
         </Switch>

@@ -19,7 +19,7 @@ function setupApp() {
   const httpServer = app.listen(config.server.port);
   const browserSocketServer = io(httpServer);
   const robotServer = http.createServer();
-  robotServer.listen(config.robot.port, '172.21.144.39');
+  robotServer.listen(config.robot.port, '0.0.0.0');
   const robotSocketServer = io(robotServer);
 
   setupSocketServers(browserSocketServer, robotSocketServer);

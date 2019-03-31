@@ -26,9 +26,7 @@ export class Logs extends Component<{}, IState> {
     });
     socket.on('log record', (data: string) => {
       console.log(`Server sent "${data}" via WebSocket`);
-      this.setState(oldState => {
-        return { logRecords: oldState.logRecords.concat(JSON.parse(data)) };
-      });
+      this.addLogRecord(data);
     });
     socket.on('error', (error: string) => {
       console.error(`Error occured: "${error}"`);
@@ -36,12 +34,36 @@ export class Logs extends Component<{}, IState> {
     socket.on('disconnect', () => {
       console.log('WebSocket connection closed');
     });
+
+    //setInterval(this.clearOldLogs.bind(this), 10000);
   }
 
   public render() {
     if (!this.state.logRecords.length) {
       return 'Аркадий, подключи робота!';
     }
+
     return <LogList list={this.state.logRecords} />;
   }
+
+  // TODO: Описать тип LogRecord вместо any
+  private addLogRecord(data: any) {
+    this.setState(oldState => {
+      if (oldState.logRecords.length > 500) {
+        return {
+          logRecords: oldState.logRecords.slice(450).concat(JSON.parse(data))
+        };
+      }
+
+      return { logRecords: oldState.logRecords.concat(JSON.parse(data)) };
+    });
+  }
+
+  // private clearOldLogs() {
+  //   if (this.state.logRecords.length > 500) {
+  //     this.setState(oldState => {
+  //       return { logRecords: oldState.logRecords.slice(oldState.logRecords.length - 500) };
+  //     });
+  //   }
+  // }
 }
